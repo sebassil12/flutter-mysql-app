@@ -1,0 +1,6 @@
+#RENAME THIS FILE TO .env TO USE your credentials for deploy mysql_db
+MYSQL_ROOT_PASSWORD=rootpass
+MYSQL_DATABASE=db_name
+MYSQL_USER=dbuser
+MYSQL_PASSWORD=dbpass
+MYSQL_PORT=3306
