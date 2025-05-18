@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import '/models/product_model.dart';
 import '/services/product_service.dart';
+import '/services/category_service.dart';
 import '/models/category_model.dart';
 class ProductDetailScreen extends StatefulWidget {
   final Product? product;
@@ -16,7 +17,8 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final _formKey = GlobalKey<FormState>();
   final ProductService _productService = ProductService();
-  List<Category> _categorias = [];
+  final CategoryService _categoryService = CategoryService();
+  late Future<List<Category>> _categoriesFuture;
   bool _isLoadingCategories = true;
   
   late String _codigoBarra;
@@ -33,6 +35,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     _categoria = widget.product?.categoria ?? 0;
     _marca = widget.product?.marca ?? '';
     _precio = widget.product?.precio ?? 0.0;
+    _categoriesFuture = _loadCategories();
+  }
+
+  Future<List<Category>> _loadCategories() async {
+    final categories = await _categoryService.getCategory();
+    setState(() {
+      _isLoadingCategories = false;
+    });
+    return categories.map((c) => Category.fromJson(c)).toList();
   }
 
   @override
@@ -71,26 +82,43 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 onChanged: (value) => _nombre = value,
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                initialValue: _categoria.toString(),
-                decoration: const InputDecoration(
-                  labelText: 'Categoría',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese la categoría';
-                  }
-                  if (int.tryParse(value) == null) {
-                    return 'Ingrese un número válido';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  final parsedCategory = int.tryParse(value);
-                  if (parsedCategory != null) {
-                    _categoria = parsedCategory;
+              FutureBuilder<List<Category>>(
+                future: _categoriesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error al cargar categorías');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No hay categorías disponibles');
+                  } else {
+                    final categories = snapshot.data!;
+                    return DropdownButtonFormField<int>(
+                      value: _categoria == 0 ? null : _categoria,
+                      decoration: const InputDecoration(
+                        labelText: 'Categoría*',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: categories
+                          .map((cat) => DropdownMenuItem<int>(
+                                value: cat.idCategoria,
+                                child: Text(cat.nombre),
+                              ))
+                          .toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Por favor seleccione la categoría';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _categoria = value;
+                          });
+                        }
+                      },
+                    );
                   }
                 },
               ),
