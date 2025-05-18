@@ -5,7 +5,7 @@ class ProductService {
   // La app movil toma a localhost como su propio dispositivo
   // static const String _baseUrl = 'http://localhost:3000/api/products';
   // Dirección que reconocen los emuladores AS como la pc host
-  static const String _baseUrl = 'http://10.0.2.2:3000/api/products';
+  static const String _baseUrl = 'http://localhost:3000/api/products';
   static const Map<String, String> _headers = {
     'Content-Type': 'application/json'
   };

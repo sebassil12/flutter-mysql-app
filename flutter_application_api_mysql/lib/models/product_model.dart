@@ -2,7 +2,7 @@ class Product {
   final int idProducto;
   final String? codigoBarra;
   final String nombre;
-  final String? categoria;
+  final int? categoria;
   final String? marca;
   final double precio;
 
@@ -18,11 +18,11 @@ class Product {
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       idProducto: json['IdProducto'],
-      codigoBarra: json['CodigoBarra'],
-      nombre: json['Nombre'],
-      categoria: json['Categoria'],
-      marca: json['Marca'],
-      precio: double.parse(json['Precio'].toString()),
+      codigoBarra: json['codigoBarra'],
+      nombre: json['nombre'],
+      categoria: json['categoria_id'],
+      marca: json['marca'],
+      precio: double.parse(json['precio'].toString()),
     );
   }
 

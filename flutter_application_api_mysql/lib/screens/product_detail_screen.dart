@@ -19,7 +19,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   late String _codigoBarra;
   late String _nombre;
-  late String _categoria;
+  late int _categoria;
   late String _marca;
   late double _precio;
 
@@ -28,7 +28,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     super.initState();
     _codigoBarra = widget.product?.codigoBarra ?? '';
     _nombre = widget.product?.nombre ?? '';
-    _categoria = widget.product?.categoria ?? '';
+    _categoria = widget.product?.categoria ?? 0;
     _marca = widget.product?.marca ?? '';
     _precio = widget.product?.precio ?? 0.0;
   }
@@ -70,12 +70,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                initialValue: _categoria,
+                initialValue: _categoria.toString(),
                 decoration: const InputDecoration(
                   labelText: 'Categoría',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value) => _categoria = value,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese la categoría';
+                  }
+                  if (int.tryParse(value) == null) {
+                    return 'Ingrese un número válido';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  final parsedCategory = int.tryParse(value);
+                  if (parsedCategory != null) {
+                    _categoria = parsedCategory;
+                  }
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -130,7 +145,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       final productData = {
         'CodigoBarra': _codigoBarra.isEmpty ? null : _codigoBarra,
         'Nombre': _nombre,
-        'Categoria': _categoria.isEmpty ? null : _categoria,
+        'Categoria': _categoria.isNaN ? null : _categoria,
         'Marca': _marca.isEmpty ? null : _marca,
         'Precio': _precio,
       };
