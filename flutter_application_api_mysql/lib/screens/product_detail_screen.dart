@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import '/models/product_model.dart';
 import '/services/product_service.dart';
-
+import '/models/category_model.dart';
 class ProductDetailScreen extends StatefulWidget {
   final Product? product;
 
@@ -16,7 +16,9 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final _formKey = GlobalKey<FormState>();
   final ProductService _productService = ProductService();
-
+  List<Category> _categorias = [];
+  bool _isLoadingCategories = true;
+  
   late String _codigoBarra;
   late String _nombre;
   late int _categoria;
