@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '/models/product_model.dart';
 import '/screens/product_detail_screen.dart';
 import '/services/product_service.dart';
+import '/services/category_service.dart';
+import '/models/category_model.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -16,16 +18,39 @@ class _ProductListScreenState extends State<ProductListScreen> {
   final ProductService _productService = ProductService();
   late Future<List<Product>> _productsFuture;
   final TextEditingController _searchController = TextEditingController();
+  final CategoryService _categoryService = CategoryService();
+
+  List<Product> _allProducts = [];
+  List<Product> _filteredProducts = [];
+  List<Category> _categories = [];
 
   @override
   void initState() {
     super.initState();
     _productsFuture = _loadProducts();
+    _loadCategories();
   }
 
   Future<List<Product>> _loadProducts() async {
     final products = await _productService.getProducts();
-    return products.map((p) => Product.fromJson(p)).toList();
+    final productList = products.map((p) => Product.fromJson(p)).toList();
+    _allProducts = productList;
+    _filteredProducts = productList;
+    return productList;
+  }
+
+  Future<void> _loadCategories() async {
+    final categories = await _categoryService.getCategory();
+    setState(() {
+      _categories = categories.map((c) => Category.fromJson(c)).toList();
+    });
+  }
+
+  String _getCategoryName(int id) {
+    final category = _categories.firstWhere(
+      (cat) => cat.idCategoria == id
+    );
+    return category.nombre;
   }
 
   void _refreshProducts() {
@@ -33,6 +58,18 @@ class _ProductListScreenState extends State<ProductListScreen> {
       _productsFuture = _loadProducts();
     });
   }
+
+  void _filterProducts(String query) {
+    setState(() {
+      _filteredProducts = _allProducts.where((product) {
+        final nameMatch = product.nombre.toLowerCase().contains(query.toLowerCase());
+        final categoryName = _getCategoryName(product.categoria?? 0).toLowerCase();
+        final categoryMatch = categoryName.contains(query.toLowerCase());
+        return nameMatch || categoryMatch;
+      }).toList();
+    });
+  }
+
 
   void _navigateToDetail(Product? product) async {
     final result = await Navigator.push(
@@ -73,7 +110,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 ),
               ),
               onChanged: (value) {
-                // Implementar búsqueda si es necesario
+                _filterProducts(value);
               },
             ),
           ),
@@ -89,16 +126,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   return const Center(child: Text('No hay productos disponibles'));
                 } else {
                   return ListView.builder(
-                    itemCount: snapshot.data!.length,
+                    itemCount: _filteredProducts.length,
                     itemBuilder: (context, index) {
-                      final product = snapshot.data![index];
+                      final product = _filteredProducts[index];
                       return Card(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
                         child: ListTile(
                           title: Text(product.nombre),
-                          subtitle: Text(
-                              '\$${product.precio.toStringAsFixed(2)}'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('\$${product.precio.toStringAsFixed(2)}'),
+                              Text(
+                              'Categoría: ${_getCategoryName(product.categoria ?? 0)}',
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            ],
+                          ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

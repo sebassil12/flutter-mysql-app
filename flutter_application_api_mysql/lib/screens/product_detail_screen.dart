@@ -19,7 +19,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final ProductService _productService = ProductService();
   final CategoryService _categoryService = CategoryService();
   late Future<List<Category>> _categoriesFuture;
-  bool _isLoadingCategories = true;
   
   late String _codigoBarra;
   late String _nombre;
@@ -40,9 +39,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Future<List<Category>> _loadCategories() async {
     final categories = await _categoryService.getCategory();
-    setState(() {
-      _isLoadingCategories = false;
-    });
     return categories.map((c) => Category.fromJson(c)).toList();
   }
 
