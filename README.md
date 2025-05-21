@@ -26,10 +26,9 @@ Configurar dentro del archivo .env las credenciales de la base de datos.
 
 Ejecutar el siguiente comando dentro de la carpeta del backend para levantar la base de datos:
 
-bash
-Copy
-Edit
-docker compose up -d
+    ```bash
+    docker compose up -d
+
 ⚠️ Nota: Se debe tener Docker instalado en la máquina.
 
 🛠️ 3. Base de datos externa (como XAMPP)
@@ -42,23 +41,20 @@ Configurar las credenciales de conexión a la base de datos en dicho archivo.
 ▶️ 4. Iniciar el servidor
 Ejecutar el siguiente comando para iniciar el backend:
 
-bash
-Copy
-Edit
-node server.js
+    ```bash
+    node server.js
+
 📱 5. Iniciar la aplicación Flutter
 Entrar a la carpeta del proyecto Flutter.
 
 Ejecutar el siguiente comando:
 
-bash
-Copy
-Edit
-flutter run
+    ```bash
+    flutter run
+
 ⚠️ Importante: Si se va a desplegar la app en un dispositivo móvil real, se debe actualizar la ruta del servidor en el archivo:
 
-bash
-Copy
-Edit
-flutter/lib/services/config_service.dart
+    ```bash
+    flutter/lib/services/config_service.dart
+
 Asegúrate de colocar la IP local del servidor backend si están en la misma red.
