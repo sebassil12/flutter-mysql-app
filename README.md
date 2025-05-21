@@ -1,20 +1,64 @@
-##Información
+# 📱 Proyecto Flutter + Node.js + MySQL
 
-Este proyecto se llevo a cabo con el siguiente stack:
---Docker para correr el motor de base de datos de MYSQL
---Node con express para realizar el backend con los endpoints
---Flutter para la aplicación móvil
+## 📦 Información
 
-##¿Cómo desplegar el proyecto?
+Este proyecto se llevó a cabo con el siguiente stack:
 
-1. Entrar a la carpeta del backend mediante consola y descargar todas las librerías necesarias mediante 
-    un "npm install"
-2. Si se desea desplegar el motor de base de datos con docker entonces:
-    2.1 Renombrar el archivo copy_env por .env y colocar dentro las credenciales que se van a utilizar para la base de datos.
-    2.2 Correr dentro de la carpeta backend el comando "docker compose up -d" (Se debe tener docker instalado en la máquina).
-3. Si ya se tiene la base de datos de MYSQL en otro entorno como XAMPP entonces solo renombrar el archivo copy_env por .env y
-    colocar las credenciales de la base de datos.
-4. Arrancamos el servidor con el comando node server.js
+- 🐳 **Docker** para correr el motor de base de datos MySQL  
+- ⚙️ **Node.js con Express** para el backend y creación de endpoints  
+- 📱 **Flutter** para la aplicación móvil
 
-5. Arrancamos la aplicación en Flutter. Tener en consideración que si se despliega en un dispositivo móvil, entonces
-    cambiar la ruta de la configuración de los servicios que se encunetra en la carpeta de flutter dentro de /lib/services/config_service.dart
+---
+
+## 🚀 ¿Cómo desplegar el proyecto?
+
+### 🔧 1. Backend
+
+1. Entrar a la carpeta del backend mediante la terminal.
+2. Instalar las dependencias necesarias con el siguiente comando:
+
+   ```bash
+   npm install
+🐳 2. Base de datos con Docker (opcional)
+Renombrar el archivo copy_env a .env.
+
+Configurar dentro del archivo .env las credenciales de la base de datos.
+
+Ejecutar el siguiente comando dentro de la carpeta del backend para levantar la base de datos:
+
+bash
+Copy
+Edit
+docker compose up -d
+⚠️ Nota: Se debe tener Docker instalado en la máquina.
+
+🛠️ 3. Base de datos externa (como XAMPP)
+Si ya se cuenta con una base de datos MySQL en otro entorno (como XAMPP):
+
+Renombrar el archivo copy_env a .env.
+
+Configurar las credenciales de conexión a la base de datos en dicho archivo.
+
+▶️ 4. Iniciar el servidor
+Ejecutar el siguiente comando para iniciar el backend:
+
+bash
+Copy
+Edit
+node server.js
+📱 5. Iniciar la aplicación Flutter
+Entrar a la carpeta del proyecto Flutter.
+
+Ejecutar el siguiente comando:
+
+bash
+Copy
+Edit
+flutter run
+⚠️ Importante: Si se va a desplegar la app en un dispositivo móvil real, se debe actualizar la ruta del servidor en el archivo:
+
+bash
+Copy
+Edit
+flutter/lib/services/config_service.dart
+Asegúrate de colocar la IP local del servidor backend si están en la misma red.
