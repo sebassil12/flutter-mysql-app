@@ -59,6 +59,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     });
   }
 
+  //Function to filter products based on search query, allows search by name of product or category name
   void _filterProducts(String query) {
     setState(() {
       _filteredProducts = _allProducts.where((product) {
